@@ -6,5 +6,6 @@ export async function signInRepository(userInfos: userData) {
 }
 
 export async function findByEmail(email: string) {
-    return prisma.users.findFirst({ where: { email } });
+    const result = await prisma.users.findUnique({ where: { email } });
+    return result;
 }
