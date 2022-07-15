@@ -5,6 +5,7 @@ export default function errorHandler(error, req: Request, res: Response, next: N
     if (error.type) {
         if (error.type === 'BAD_REQUEST') statusCode = 400;
         if (error.type === 'CONFLICT') statusCode = 409;
+        if (error.type === 'UNAUTHORIZED') statusCode = 401;
         return res.status(statusCode).send(error.message);
     }
 
