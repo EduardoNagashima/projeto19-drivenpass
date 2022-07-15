@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { signInService } from "../services/userService.js";
+import { signUpService } from "../services/userService.js";
 
-export async function signIn(req: Request, res: Response) {
+export async function signUp(req: Request, res: Response) {
     const { email, password } = res.locals;
-    await signInService({ email, password });
+    await signUpService({ email, password });
     res.sendStatus(201);
 }
