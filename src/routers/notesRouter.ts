@@ -8,6 +8,7 @@ const notesRouter = Router();
 notesRouter.use(tokenValidation);
 notesRouter.post('/notes', notesValidation, createNote)
 notesRouter.get('/notes', getNote)
+notesRouter.get('/notes/:id', getNote)
 notesRouter.delete('/notes/:id', deleteNote)
 
 export default notesRouter;
