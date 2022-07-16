@@ -37,3 +37,29 @@ export async function getCredentialById(id: number, user: Users) {
     return result;
 }
 
+export async function getCredentials(user: Users) {
+    const result = await prisma.credentials.findMany({
+        where: {
+            usersId: user.id
+        },
+        select: {
+            name: true,
+            url: true,
+            username: true,
+            password: true
+        }
+    })
+    return result;
+}
+
+export async function deleteCredentialRepository(id: number, user) {
+    const count = await prisma.credentials.deleteMany({
+        where: {
+            AND: [
+                { id },
+                { usersId: user.id }
+            ]
+        },
+    });
+    return count;
+}

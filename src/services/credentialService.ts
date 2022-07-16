@@ -1,5 +1,5 @@
-import { Credentials } from "@prisma/client";
-import { createCredential, verifyByName, getCredentialById } from "../repositories/credentialRepository.js";
+import { Credentials, Users } from "@prisma/client";
+import { createCredential, verifyByName, getCredentialById, getCredentials, deleteCredentialRepository } from "../repositories/credentialRepository.js";
 import Cryptr from "cryptr";
 import dotenv from "dotenv";
 dotenv.config();
@@ -15,8 +15,24 @@ export async function create(credentialInfo: credentialData, user) {
     await createCredential(credentialInfo, user);
 }
 
-export async function getCredentialsService(id: number, user) {
+export async function getCredentialsByIdService(id: number, user) {
     const credentials = await getCredentialById(id, user);
-    console.log(credentials)
+    if (!credentials[0]) throw { type: 'UNAUTHORIZED', message: 'Credencial indisponível' }
+    const cryptr = new Cryptr(process.env.CRYPTR_KEY);
+    credentials[0].password = cryptr.decrypt(credentials[0].password)
     return credentials;
+}
+
+export async function getCredentialsService(user) {
+    const credentials = await getCredentials(user);
+    const cryptr = new Cryptr(process.env.CRYPTR_KEY);
+    credentials.forEach(el => {
+        el.password = cryptr.decrypt(el.password)
+    })
+    return credentials;
+}
+
+export async function deleteCredentialService(id: number, user) {
+    const result = await deleteCredentialRepository(id, user);
+    if (result.count === 0) throw { type: 'NOT_FOUND', message: 'Credencial inexistente na conta' }
 }
