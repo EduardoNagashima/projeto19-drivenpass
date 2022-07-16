@@ -24,7 +24,7 @@ export function credentialValidation(req: Request, res: Response, next: NextFunc
 export async function tokenValidation(req: Request, res: Response, next: NextFunction) {
     const { authorization } = req.headers;
     const token = authorization.replace('Bearer ', "");
-    if (!token) throw { type: 'BAD_REQUEST', message: 'invalid token' };
+    if (!token || !authorization) throw { type: 'BAD_REQUEST', message: 'invalid token' };
     try {
         const { email } = jwt.verify(token, process.env.JWT_SECRET);
         const user = await findByEmail(email);

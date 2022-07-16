@@ -6,7 +6,7 @@ export async function verifyByName(name: string, user: Users) {
     const result = await prisma.credentials.findFirst({
         where: {
             AND: [
-                { name: name },
+                { name },
                 { usersId: user.id }
             ]
         },
@@ -18,3 +18,22 @@ export async function verifyByName(name: string, user: Users) {
 export async function createCredential(credentialInfo: credentialData, user: Users) {
     await prisma.credentials.create({ data: { ...credentialInfo, usersId: user.id } })
 }
+
+export async function getCredentialById(id: number, user: Users) {
+    const result = await prisma.credentials.findMany({
+        where: {
+            AND: [
+                { id },
+                { usersId: user.id }
+            ]
+        },
+        select: {
+            name: true,
+            url: true,
+            username: true,
+            password: true
+        }
+    });
+    return result;
+}
+
