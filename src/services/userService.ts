@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv"
 import jwt from "jsonwebtoken";
-import { Users } from "@prisma/client";
+import { User } from "@prisma/client";
 import { findByEmail, signInRepository } from "../repositories/userRepository.js";
 dotenv.config();
 
-export type userData = Omit<Users, "id">
+export type userData = Omit<User, "id">
 
 export async function signUpService(userInfos: userData) {
     userInfos.password = bcrypt.hashSync(userInfos.password, 10);

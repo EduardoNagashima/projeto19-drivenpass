@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { credentialData } from "../services/credentialService.js";
+import { noteData } from "../services/noteService.js";
 import { userData } from "../services/userService.js";
-import { credentialSchema, signUpSchema } from "../utils/schemas.js";
+import { credentialSchema, signUpSchema, notesSchema } from "../utils/schemas.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { findByEmail } from "../repositories/userRepository.js";
@@ -17,6 +18,13 @@ export function signUpValidation(req: Request, res: Response, next: NextFunction
 export function credentialValidation(req: Request, res: Response, next: NextFunction) {
     const credentialInfo: credentialData = req.body;
     const { error } = credentialSchema.validate(credentialInfo);
+    if (error) throw { type: 'BAD_REQUEST', message: error.details }
+    next();
+}
+
+export function notesValidation(req: Request, res: Response, next: NextFunction) {
+    const notesInfo: noteData = req.body;
+    const { error } = notesSchema.validate(notesInfo);
     if (error) throw { type: 'BAD_REQUEST', message: error.details }
     next();
 }

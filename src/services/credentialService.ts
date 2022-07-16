@@ -1,10 +1,10 @@
-import { Credentials, Users } from "@prisma/client";
+import { Credential } from "@prisma/client";
 import { createCredential, verifyByName, getCredentialById, getCredentials, deleteCredentialRepository } from "../repositories/credentialRepository.js";
 import Cryptr from "cryptr";
 import dotenv from "dotenv";
 dotenv.config();
 
-export type credentialData = Omit<Credentials, "id" | "usersId">
+export type credentialData = Omit<Credential, "id" | "usersId">
 
 export async function create(credentialInfo: credentialData, user) {
     const nameAlreadyExist = await verifyByName(credentialInfo.name, user);

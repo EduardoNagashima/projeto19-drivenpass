@@ -1,30 +1,30 @@
-import { Users } from "@prisma/client";
+import { User } from "@prisma/client";
 import { credentialData } from "../services/credentialService.js";
 import prisma from "./../config/database.js";
 
-export async function verifyByName(name: string, user: Users) {
-    const result = await prisma.credentials.findFirst({
+export async function verifyByName(name: string, user: User) {
+    const result = await prisma.credential.findFirst({
         where: {
             AND: [
                 { name },
-                { usersId: user.id }
+                { userId: user.id }
             ]
         },
-        include: { users: true }
+        include: { author: true }
     })
     return result;
 }
 
-export async function createCredential(credentialInfo: credentialData, user: Users) {
-    await prisma.credentials.create({ data: { ...credentialInfo, usersId: user.id } })
+export async function createCredential(credentialInfo: credentialData, user: User) {
+    await prisma.credential.create({ data: { ...credentialInfo, userId: user.id } })
 }
 
-export async function getCredentialById(id: number, user: Users) {
-    const result = await prisma.credentials.findMany({
+export async function getCredentialById(id: number, user: User) {
+    const result = await prisma.credential.findMany({
         where: {
             AND: [
                 { id },
-                { usersId: user.id }
+                { userId: user.id }
             ]
         },
         select: {
@@ -37,10 +37,10 @@ export async function getCredentialById(id: number, user: Users) {
     return result;
 }
 
-export async function getCredentials(user: Users) {
-    const result = await prisma.credentials.findMany({
+export async function getCredentials(user: User) {
+    const result = await prisma.credential.findMany({
         where: {
-            usersId: user.id
+            userId: user.id
         },
         select: {
             name: true,
@@ -53,11 +53,11 @@ export async function getCredentials(user: Users) {
 }
 
 export async function deleteCredentialRepository(id: number, user) {
-    const count = await prisma.credentials.deleteMany({
+    const count = await prisma.credential.deleteMany({
         where: {
             AND: [
                 { id },
-                { usersId: user.id }
+                { userId: user.id }
             ]
         },
     });
