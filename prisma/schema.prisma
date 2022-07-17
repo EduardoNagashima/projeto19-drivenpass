@@ -15,7 +15,8 @@ model User {
   email       String       @unique
   password    String
   credentials Credential[]
-  Notes       Note[]
+  notes       Note[]
+  cards       Card[]
 
   @@map("users")
 }
@@ -26,7 +27,7 @@ model Credential {
   url      String
   username String
   password String
-  author   User   @relation(fields: [userId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
   userId   Int
 
   @@map("credentials")
@@ -36,8 +37,24 @@ model Note {
   id         Int    @id @default(autoincrement())
   tittle     String
   annotation String
-  author     User   @relation(fields: [userId], references: [id])
+  user       User   @relation(fields: [userId], references: [id])
   userId     Int
 
   @@map("notes")
+}
+
+model Card {
+  id         Int     @id @default(autoincrement())
+  tittle     String
+  cardNumber String
+  cardName   String
+  cvc        String
+  password   String
+  expDate    String
+  isVirtual  Boolean
+  type       String
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int
+
+  @@map("cards")
 }

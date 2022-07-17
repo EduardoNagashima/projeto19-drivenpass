@@ -1,4 +1,3 @@
-import { number } from "joi";
 import prisma from "../config/database.js";
 import { noteData } from "../services/noteService.js";
 

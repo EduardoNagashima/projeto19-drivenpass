@@ -10,7 +10,7 @@ export async function verifyByName(name: string, user: User) {
                 { userId: user.id }
             ]
         },
-        include: { author: true }
+        include: { user: true }
     })
     return result;
 }
