@@ -15,10 +15,13 @@ export async function createCardService(cardInfo: cardData, user) {
     await cardRepository.create({ ...cardInfo, userId: user.id, password: cryptPassword, cvc: cryptCVC });
 }
 
-////FIXME AINDA FALTA DESCRIPTOGRAFAR OS DADOS ANTES DE ENVIAR!
 export async function getCardService(user: any) {
     const cards = await cardRepository.find(user);
     const cryptr = new Cryptr(process.env.CRYPTR_KEY);
+    cards.forEach(el => {
+        el.password = cryptr.decrypt(el.password);
+        el.cvc = cryptr.decrypt(el.cvc);
+    });
     return cards;
 }
 
