@@ -2,11 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { credentialData } from "../services/credentialService.js";
 import { noteData } from "../services/noteService.js";
 import { userData } from "../services/userService.js";
-import { credentialSchema, signUpSchema, notesSchema, cardSchema } from "../utils/schemas.js";
+import { credentialSchema, signUpSchema, wifiSchema, notesSchema, cardSchema } from "../utils/schemas.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { findByEmail } from "../repositories/userRepository.js";
 import { cardData } from "../services/cardService.js";
+import { wifiData } from "../services/wifiService.js";
 dotenv.config();
 
 export function signUpValidation(req: Request, res: Response, next: NextFunction) {
@@ -48,6 +49,13 @@ export async function tokenValidation(req: Request, res: Response, next: NextFun
 export function cardValidation(req: Request, res: Response, next: NextFunction) {
     const cardInfo: cardData = req.body;
     const { error } = cardSchema.validate(cardInfo);
+    if (error) throw { type: 'BAD_REQUEST', message: error.details };
+    next();
+}
+
+export function wifiValidation(req: Request, res: Response, next: NextFunction) {
+    const wifiInfo: wifiData = req.body;
+    const { error } = wifiSchema.validate(wifiInfo);
     if (error) throw { type: 'BAD_REQUEST', message: error.details };
     next();
 }

@@ -15,12 +15,19 @@ export async function createCardService(cardInfo: cardData, user) {
     await cardRepository.create({ ...cardInfo, userId: user.id, password: cryptPassword, cvc: cryptCVC });
 }
 
+////FIXME AINDA FALTA DESCRIPTOGRAFAR OS DADOS ANTES DE ENVIAR!
 export async function getCardService(user: any) {
-    return await cardRepository.find(user);
+    const cards = await cardRepository.find(user);
+    const cryptr = new Cryptr(process.env.CRYPTR_KEY);
+    return cards;
 }
 
 export async function getCardByIdService(id: number, user: any) {
-    return await cardRepository.findById(id, user)
+    const cryptr = new Cryptr(process.env.CRYPTR_KEY);
+    const cards = await cardRepository.findById(id, user);
+    cards.password = cryptr.decrypt(cards.password)
+    cards.cvc = cryptr.decrypt(cards.cvc);
+    return cards;
 }
 
 export async function deleteCardService(id: number, user: any) {
